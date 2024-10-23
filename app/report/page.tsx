@@ -153,10 +153,12 @@ export default function ReportPage() {
       } catch (error) {
         console.error('Failed to parse JSON response:', text);
         setVerificationStatus('failure');
+        console.log(error);
       }
     } catch (error) {
       console.error('Error verifying waste:', error);
       setVerificationStatus('failure');
+      console.log(error);
     }
   }
 
@@ -176,7 +178,7 @@ export default function ReportPage() {
         newReport.amount,
         preview || undefined,
         verificationResult ? JSON.stringify(verificationResult) : undefined
-      ) as any;
+      ) 
       
       const formattedReport = {
         id: report.id,
@@ -198,6 +200,7 @@ export default function ReportPage() {
     } catch (error) {
       console.error('Error submitting report:', error);
       toast.error('Failed to submit report. Please try again.');
+      console.log(error);
     } finally {
       setIsSubmitting(false);
     }
