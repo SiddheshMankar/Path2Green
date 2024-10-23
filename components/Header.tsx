@@ -2,7 +2,7 @@
 'use client'
 import { useState, useEffect } from "react"
 import Link from "next/link"
-]
+
 import { Button } from "@/components/ui/button"
 import { Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn } from "lucide-react"
 import { 
@@ -53,8 +53,13 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<any>(null);
-  // const pathname = usePathname()
-  // console.log('pathname', pathname);
+  
+  interface Notification {
+    id: number;
+    type: string;
+    message: string; // Add this line to define the message property
+  }
+  
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const isMobile = useMediaQuery("(max-width: 768px)")
   const [balance, setBalance] = useState(0)
