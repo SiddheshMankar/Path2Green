@@ -168,6 +168,7 @@ export default function ReportPage() {
       toast.error('Please verify the waste before submitting or log in.');
       return;
     }
+   
     
     setIsSubmitting(true);
     try {
@@ -178,7 +179,7 @@ export default function ReportPage() {
         newReport.amount,
         preview || undefined,
         verificationResult ? JSON.stringify(verificationResult) : undefined
-      ) 
+      )  as any;
       
       const formattedReport = {
         id: report.id,
