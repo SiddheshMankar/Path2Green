@@ -2,7 +2,7 @@
 'use client'
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from 'next/navigation'
+]
 import { Button } from "@/components/ui/button"
 import { Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn } from "lucide-react"
 import { 
@@ -48,13 +48,13 @@ interface HeaderProps {
 }
 
 
-export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
+export default function Header({ onMenuClick }: HeaderProps) {
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<any>(null);
-  const pathname = usePathname()
-  console.log('pathname', pathname);
+  // const pathname = usePathname()
+  // console.log('pathname', pathname);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const isMobile = useMediaQuery("(max-width: 768px)")
   const [balance, setBalance] = useState(0)
