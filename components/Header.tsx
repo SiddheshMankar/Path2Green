@@ -1,11 +1,10 @@
-'use client'
 // @ts-nocheck
-/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
 import { useState, useEffect } from "react"
 import Link from "next/link"
-// import { usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn } from "lucide-react"
+import { Menu, Coins, Leaf, Search, Bell, User, ChevronDown, LogIn, LogOut } from "lucide-react"
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -14,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { Web3Auth } from "@web3auth/modal"
-import { CHAIN_NAMESPACES, IProvider, WalletLoginError, WEB3AUTH_NETWORK } from "@web3auth/base"
+import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { createUser, getUnreadNotifications, markNotificationAsRead, getUserByEmail, getUserBalance } from "@/utils/db/action"
@@ -44,17 +43,17 @@ const web3auth = new Web3Auth({
 
 interface HeaderProps {
   onMenuClick: () => void;
-  totalEarnings: { id: number; name: string; cost: number; description: string | null; collectionInfo: string; }[];
+  totalEarnings: number;
 }
 
-export default function Header({ onMenuClick }: HeaderProps) {
+export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<any>(null);
-//  const pathname = usePathname()
+  const pathname = usePathname()
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const isMobile = useMediaQuery("(max-width: 900px)")
+  const isMobile = useMediaQuery("(max-width: 768px)")
   const [balance, setBalance] = useState(0)
 
   console.log('user info', userInfo);
@@ -99,6 +98,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         }
       }
     };
+
     fetchNotifications();
 
     // Set up periodic checking for new notifications
@@ -131,6 +131,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
       window.removeEventListener('balanceUpdated', handleBalanceUpdate as EventListener);
     };
   }, [userInfo]);
+
   const login = async () => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
@@ -138,7 +139,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
     }
     try {
       const web3authProvider = await web3auth.connect();
-      console.log(provider);
       setProvider(web3authProvider);
       setLoggedIn(true);
       const user = await web3auth.getUserInfo();
@@ -146,16 +146,14 @@ export default function Header({ onMenuClick }: HeaderProps) {
       if (user.email) {
         localStorage.setItem('userEmail', user.email);
         try {
-          await createUser(user.email, user.name || '');
+          await createUser(user.email, user.name || 'Anonymous User');
         } catch (error) {
           console.error("Error creating user:", error);
+          // Handle the error appropriately, maybe show a message to the user
         }
       }
     } catch (error) {
       console.error("Error during login:", error);
-      if (error instanceof WalletLoginError) {
-        console.error("WalletLoginError details:", error.message, error.code);
-      }
     }
   };
 
@@ -209,11 +207,10 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <Button variant="ghost" size="icon" className="mr-2 md:mr-4" onClick={onMenuClick}>
             <Menu className="h-6 w-6" />
           </Button>
-          {/* logo is here */}
           <Link href="/" className="flex items-center">
             <Leaf className="h-6 w-6 md:h-8 md:w-8 text-green-500 mr-1 md:mr-2" />
             <div className="flex flex-col">
-              <span className="font-bold text-base md:text-lg text-gray-800">Path2Green</span>
+              <span className="font-bold text-base md:text-lg text-gray-800">Zero2Hero</span>
               <span className="text-[8px] md:text-[10px] text-gray-500 -mt-1">ETHOnline24</span>
             </div>
           </Link>
@@ -232,20 +229,20 @@ export default function Header({ onMenuClick }: HeaderProps) {
         )}
         <div className="flex items-center">
           {isMobile && (
-            <Button variant="ghost" size="icon" className="mr-2 block text-left ">
+            <Button variant="ghost" size="icon" className="mr-2">
               <Search className="h-5 w-5" />
             </Button>
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="mr-2 relative">
+              <Button variant="ghost" size="icon" className="mr-2 relative">
                 <Bell className="h-5 w-5" />
                 {notifications.length > 0 && (
                   <Badge className="absolute -top-1 -right-1 px-1 min-w-[1.2rem] h-5">
-                  {notifications.length}
+                    {notifications.length}
                   </Badge>
                 )}
-                </Button>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64">
               {notifications.length > 0 ? (
