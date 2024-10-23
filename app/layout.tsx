@@ -5,7 +5,7 @@ import { Inter } from 'next/font/google'
 import "./globals.css"
 import Header from "@/components/Header"
 import Sidebar from "@/components/SIdebar"
-
+import Loader from './Loader'
 import { Toaster } from 'react-hot-toast'
 import { getAvailableRewards, getUserByEmail } from '@/utils/db/action'
 
@@ -18,6 +18,7 @@ export default function RootLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [totalEarnings, setTotalEarnings] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchTotalEarnings = async () => {
@@ -36,6 +37,9 @@ export default function RootLayout({
       } catch (error) {
         console.error('Error fetching total earnings:', error)
       }
+      finally {
+        setLoading(false); // Set loading to false once data fetching is complete
+      }
     }
 
     fetchTotalEarnings()
@@ -44,6 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        {loading ?(
+            <Loader />
+        ):(
+          <>
         <div className="min-h-screen bg-gray-50 flex flex-col">
           <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} totalEarnings={totalEarnings} />
           <div className="flex flex-1">
@@ -54,6 +62,8 @@ export default function RootLayout({
           </div>
         </div>
         <Toaster />
+        </>
+)}
       </body>
     </html>
   )
