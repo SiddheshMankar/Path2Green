@@ -98,7 +98,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
         const user = await getUserByEmail(userInfo.email);
         if (user) {
           const unreadNotifications = await getUnreadNotifications(user.id);
-           // @ts-ignore
+       
           setNotifications(unreadNotifications);
         }
       }
@@ -197,7 +197,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
   const handleNotificationClick = async (notificationId: number) => {
     await markNotificationAsRead(notificationId);
     setNotifications(prevNotifications => 
-      // @ts-expect-error
+    
       prevNotifications.filter(notification => notification.id !== notificationId)
     );
   };
@@ -256,7 +256,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
               {notifications.length > 0 ? (
                 notifications.map((notification) => (
                   <DropdownMenuItem 
-                 // @ts-expect-error
+               
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification.id)}
                   >
