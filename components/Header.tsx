@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 'use client'
 import { useState, useEffect } from "react"
 import Link from "next/link"
@@ -44,7 +44,9 @@ const web3auth = new Web3Auth({
 interface HeaderProps {
   onMenuClick: () => void;
   totalEarnings: number;
+  
 }
+
 
 export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
   const [provider, setProvider] = useState<IProvider | null>(null);
@@ -62,6 +64,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
     const init = async () => {
       try {
         await web3auth.initModal();
+        console.log(provider);
         setProvider(web3auth.provider);
 
         if (web3auth.connected) {
@@ -94,6 +97,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
         const user = await getUserByEmail(userInfo.email);
         if (user) {
           const unreadNotifications = await getUnreadNotifications(user.id);
+           // @ts-ignore
           setNotifications(unreadNotifications);
         }
       }
@@ -192,6 +196,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
   const handleNotificationClick = async (notificationId: number) => {
     await markNotificationAsRead(notificationId);
     setNotifications(prevNotifications => 
+      // @ts-expect-error
       prevNotifications.filter(notification => notification.id !== notificationId)
     );
   };
@@ -244,15 +249,20 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
                 )}
               </Button>
             </DropdownMenuTrigger>
+           
             <DropdownMenuContent align="end" className="w-64">
+
               {notifications.length > 0 ? (
                 notifications.map((notification) => (
                   <DropdownMenuItem 
+                 // @ts-expect-error
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification.id)}
                   >
                     <div className="flex flex-col">
+                 
                       <span className="font-medium">{notification.type}</span>
+                    
                       <span className="text-sm text-gray-500">{notification.message}</span>
                     </div>
                   </DropdownMenuItem>
