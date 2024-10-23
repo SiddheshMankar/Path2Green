@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [totalEarnings, setTotalEarnings] = useState(0)
+  const [totalEarnings, setTotalEarnings] = useState<{ id: number; name: string; cost: number; description: string | null; collectionInfo: string; }[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
