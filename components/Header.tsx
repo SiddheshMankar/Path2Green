@@ -42,7 +42,7 @@ const web3auth = new Web3Auth({
 
 interface HeaderProps {
   onMenuClick: () => void;
-  // totalEarnings: number;
+  totalEarnings: { id: number; name: string; cost: number; description: string | null; collectionInfo: string; }[];
 }
 
 export default function Header({ onMenuClick }: HeaderProps) {
